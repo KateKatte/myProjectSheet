@@ -8,24 +8,31 @@ import { GraphQLClient } from 'graphql-request'
 const gql =  new GraphQLClient("http://localhost:4000/graphql", { headers: {} })
 
 gql.request(`query getSheet ($sheetId: Int!) {
-  sheet (id: $sheetId) {
-    title
-    id
-  }
-}`,
-      {
-        "sheetId": 5
-      }
-).then(data => store.dispatch({type: 'SHEET_GOT', data}))
-console.log(gql)
+    sheet (id: $sheetId) {
+      title
+      id
+    }
+  }`,
+  {
+    "sheetId": 5
+  }).then(data => console.log(data))
 
 class SheetFeed extends Component {
-    render () {
+    render (props) {
+        gql.request(`query getSheet ($sheetId: Int!) {
+            sheet (id: $sheetId) {
+              title
+              id
+            }
+          }`,
+          {
+            "sheetId": 5
+          }).then(data => store.dispatch({data}))
         console.log(this.props)
         return (
             <div className='sheet'>
                 <div>{this.props.sheet.id}</div>
-                <div>{this.props.sheet.title}</div>
+                <div>{this.props.sheet.map(item => {item.title})}</div>
             </div>
         )
     }
@@ -89,9 +96,8 @@ class SheetPage extends React.Component {
       {
         "sheetId": this.props.match.params.id
       }).then(data => store.dispatch({type: 'SHEET_GOT', data}))
-      console.log (this.props)
     return (
-      <Sheet id={this.props.match.params.id}  />
+      <Sheet id={this.props.match.params.id} />
     )
 }}
 
