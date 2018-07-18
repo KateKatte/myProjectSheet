@@ -19,20 +19,20 @@ gql.request(`query getSheet ($sheetId: Int!) {
 
 class SheetFeed extends Component {
     render (props) {
-        gql.request(`query getSheet ($sheetId: Int!) {
-            sheet (id: $sheetId) {
-              title
-              id
-            }
-          }`,
-          {
-            "sheetId": 5
-          }).then(data => store.dispatch({data}))
+        // gql.request(`query getSheet ($sheetId: Int!) {
+        //     sheet (id: $sheetId) {
+        //       title
+        //       id
+        //     }
+        //   }`,
+        //   {
+        //     "sheetId": 5
+        //   }).then(data => store.dispatch({data}))
         console.log(this.props)
         return (
             <div className='sheet'>
                 <div>{this.props.sheet.id}</div>
-                <div>{this.props.sheet.map(item => {item.title})}</div>
+                <div>{this.props.sheet.title}</div>
             </div>
         )
     }
@@ -56,7 +56,20 @@ class Feed extends Component {
 }
 
 class Sheet extends Component {
-    render () {
+    render (props) {
+        gql.request(`query getSheet ($sheetId: Int!) {
+            sheet (id: $sheetId) {
+            title
+            id
+        }
+        }`,
+        {
+        "sheetId": 2
+        }).then(data => store.dispatch({type: 'SHEET_GOT', data}))
+        // {for (let key of this.props.data) {
+        //         var item = []
+        //         item.push(this.props.data[key])
+        // }})
         console.log(this.props)
         return (
             <div>
@@ -64,14 +77,14 @@ class Sheet extends Component {
                    id sheet: {this.props.id}
                 </div>
                 <div className = "title"> 
-                   title sheet: {this.props.title}
+                   title sheet: {this.props.item}
                 </div>
             </div>
         )
     }
 }
 
-class GetSheet extends React.Component {
+class GetSheet extends Component {
   render () {
       return (
           <Router history= {createHistory ()}>
@@ -85,7 +98,7 @@ class GetSheet extends React.Component {
 }
 
 
-class SheetPage extends React.Component {
+class SheetPage extends Component {
     render (props) {
       gql.request(`query getSheet ($sheetId: Int!) {
         sheet (id: $sheetId) {
@@ -96,7 +109,9 @@ class SheetPage extends React.Component {
       {
         "sheetId": this.props.match.params.id
       }).then(data => store.dispatch({type: 'SHEET_GOT', data}))
+      console.log(this.props)
     return (
+        // <div></div>
       <Sheet id={this.props.match.params.id} />
     )
 }}

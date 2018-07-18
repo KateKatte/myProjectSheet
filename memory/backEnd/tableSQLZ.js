@@ -66,6 +66,11 @@ var schema = buildSchema(`
         sheet(id: Int!): Sheet
         user (id: Int!): User
     }
+    type Mutation {
+        createUser(login: String!, mail: String!, password: String!): User
+        createSheet(userID: Int!, title: String!): User
+    }
+
     type Sheet {
         id: Int
         title: String
@@ -73,17 +78,47 @@ var schema = buildSchema(`
     type User {
         id: Int
         login: String
+        mail: String
+        password: String
+        sheets: [Sheet]
     }
 `);
+
+async function getUser(args){
+    let id = args.id
+    let user = await User.findById(id)
+    user.sheets = await user.getSheets()
+    return user;
+}
+
 function getSheet(args){
     let id = args.id
     return Sheet.findById(id)
 }
-// Root resolver
+
+function getUserSheets(args){
+    let id = args.id
+    return User.findById(id).then( user => user.getSheets() )
+}
+
+async function createUser({login, mail, password}){
+    return User.create({login, mail, password})
+}
+async function createSheet({userID, title}){
+    let user  = await User.findById(userID)
+    let sheet = await Sheet.create({title})
+    user.addSheet(sheet)
+    return sheet
+}
+
+
 var root = {
-    sheet: getSheet
+    sheet: getSheet,
+    user: getUser,
+    createUser,
+    createSheet,
 };
-// Create an express server and a GraphQL endpoint
+
 app.use('/graphql', express_graphql({
     schema: schema,
     rootValue: root,
