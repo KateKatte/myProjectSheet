@@ -15,17 +15,17 @@ var User = sequelize.define('user', {
 });
 var Sheet = sequelize.define('sheet', {
     title: Sequelize.STRING,
-    key:  {type: Sequelize.STRING, 
-        unique: true,},
+    // key: {type: Sequelize.STRING, unique: true}
 } )
 
-Sheet.beforeCreate(function(model, options) {
-    return new Promise ((resolve, reject) => {
-        var shajs = require('sha.js')
-        model.key = shajs('sha256').update(`${Math.random}${(new Date()).toString()}${this.title}`).digest('hex')
-        resolve(model, options)
-    });
-})
+
+// Sheet.beforeCreate(function(model, options) {
+//     return new Promise ((resolve, reject) => {
+//         var shajs = require('sha.js')
+//         model.key = shajs('sha256').update(`${Math.random}${(new Date()).toString()}${this.title}`).digest('hex')
+//         resolve(model, options)
+//     });
+// })
 
 User.hasMany(Sheet)
 

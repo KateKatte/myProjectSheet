@@ -192,10 +192,10 @@ class AddUser extends Component {
     render (){
         return (
             <div>
-              <input ref={c => this.login = c}/>
-              <input ref={c => this.mail = c} />
-              <input ref={c => this.password = c} />
-              <button onClick={this.save.bind(this)}>Save</button>
+              <input ref={c => this.login = c} placeholder = "login"/>
+              <input ref={c => this.mail = c} placeholder = "mail"/>
+              <input ref={c => this.password = c} placeholder = "password"/>
+              <button onClick={this.save.bind(this)}>Save user</button>
             </div>
         )
     }
@@ -216,9 +216,9 @@ class AddSheet extends Component {
     render (){
         return (
             <div>
-              <input ref={c => this.userID = c}/>
-              <input ref={c => this.title = c} />
-              <button onClick={this.save.bind(this)}>Save</button>
+              <input ref={c => this.userID = c} placeholder = "userID"/>
+              <input ref={c => this.title = c} placeholder = "title"/>
+              <button onClick={this.save.bind(this)}>Save sheet</button>
             </div>
         )
     }

@@ -99,6 +99,27 @@ class TableInput extends Component {
     }
 }
 
+// class InputData extends Component {
+//   mouseOver(event){
+//       let parentId = +(ev.target.href.split('#')[1].match(/^comment(\d+)$/)[1])
+//       this.props.onParentLink(parentId)
+//   }
+//   mouseOut(ev){
+//       this.props.onParentLink(null)
+//   }
+//   render (){
+//       return (
+//           <div id={`comment${this.props.comment.id}`} 
+//             style={{backgroundColor: this.props.highlighted ? '#CFF' : ""}}>
+//             {this.props.comment.text} 
+//             { this.props.parentId ? <a onMouseOver={this.mouseOver.bind(this)}
+//                                        onMouseOut={this.mouseOut.bind(this)}
+//                                        href={`#comment${this.props.parentId}`}> answer to...</a> : "" }
+//           </div>
+//       )
+//   }
+// }
+
 class AppRedux extends Component {
     render() {
       return (

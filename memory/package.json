@@ -17,6 +17,7 @@
     "react-scripts": "1.1.4",
     "redux": "^1.0.0-rc",
     "sequelize": "^4.38.0",
+    "sha": "^2.0.1",
     "sqlite3": "^4.0.1"
   },
   "scripts": {
