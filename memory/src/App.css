@@ -39,6 +39,7 @@ td, tr .cells {
   width: 55px;
   height: 15px;
   border: 1px solid;
+  font-size: small;
 }
 .cells1 {
   width: 15px;

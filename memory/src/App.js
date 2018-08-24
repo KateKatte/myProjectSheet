@@ -3,6 +3,7 @@ import logo from './logo.svg';
 import './App.css';
 // import Table from './gridTable'
 import AppRedux from './inputRedux'
+import Table from './gridTable'
 import AppGraphRedux from './graphRedux'
 import {Router, Route} from "react-router-dom"
 import createHistory from "history/createBrowserHistory"

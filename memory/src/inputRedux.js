@@ -4,121 +4,132 @@ import './App.css';
 
 import { connect, Provider} from 'react-redux';
 import { createStore, combineReducers } from 'redux';
+import { stat } from 'fs';
 
+class CellComponent extends Component {
+  onClick = () => {
+    this.props.onClick(this.props.columns, this.props.rows);
+};
 
-const allCells = new Array();
-for (var i = 0; i <= 25; i++) {
-  allCells[i] = new Array();
-  for (var j = 0; j <= 20; j++) {
-    var oneCells = {}
-    oneCells['value']=" "
-    allCells[i][j] = oneCells;
+render() {
+    return(
+     <td onClick = {this.onClick}> {this.props.children} </td>
+    )
   }
 }
-
-class CellsTable extends Component {
-  constructor(props) {
-      super (props);
-      this.state = {allCells: []}
-
-  }
+class Table extends Component{
+  cellClick = (i, j) => {
+    console.log (i,j)
+};
 
   render(){
-    var allCells = new Array();
-for (var i = 0; i < 25; i++) {
-  allCells[i] = new Array();
-  for (var j = 1; j <= 20; j++) {
-    var oneCells = {}
-    oneCells['name']= String.fromCharCode(65+i) +  (+(+ j))
-    allCells[i][j] = oneCells;
+    console.log(this.props);
+    var trs= new Array();
+    for (var i = 0; i <= this.props.rows; i++) {
+      var tds = new Array();
+      for (var j = 0; j <= this.props.columns; j++) {
+        // tds.push (<td columns = {i} rows = {j} onClick = {this.cellClick.bind(this, i, j)}> {i} x {j} </td>)
+        tds.push (<CellComponent columns = {i} rows = {j} onClick = {this.cellClick.bind(this, i, j)}> </CellComponent>)
+        // tds.push (<CellComponent columns = {i} rows = {j} onClick = {this.cellClick}/>)
+      }
+      trs.push(<tr>{tds}</tr>)
+    }
+    return (
+      <table> {trs} </table>  
+    )
   }
 }
-      return (
-       
-          <tr>
-          {allCells.map(item => (<td className = "cells"> {item.name} </td>))}
-          </tr>
-        
-      );
+
+// function cellPlaceReducer(state, action){
+//   if (state === undefined){
+//       return {data: {}, status: 'ADD_CELL'}
+//   }
+//   if (action.type === 'CELL'){
+//       return {data: action.data.cell, status: 'INPT_CELL'}
+//   }
+//   return state;
+// }
+
+// const reducerCellPlace = combineReducers({
+//     cell: cellPlaceReducer
+//   })
+  
+//   var store = createStore(reducerCellPlace);
+//   store.subscribe( () => console.log(store.getState()))
+
+
+function cellPlace (state = {}, action){
+  if (state === undefined){
+          return {data: {i: this.props.i, j: this.props.j}, status: 'ADD_CELL'}
+      }
+  if (action.type ==='CELL'){
+    return {data: action.data.cell, status: 'INPT_CELL'}
   }
+  console.log(action)
+  return state
 }
 
-class Table extends Component {
-  constructor(props){
-    super (props);
-    }
-    
-render() {
-  return (
-    <table className = 'table'> 
-    <tbody>
-        {this.props.cells.map((item) => <CellsTable data ={item}/> )}
-        </tbody>
-    </table>              
-  );
- 
-  } 
-}
+const reducerCellPlace = combineReducers({
+      cell: cellPlace
+    })
 
-function allCellsReducer(state, action){
-    if (state === undefined){
-        return allCells;
-    }
+const store = createStore(reducerCellPlace);
+console.log(store.getState())
 
-    if (action.type === 'ADD_ITEM'){
-        return [...state, {name: action.name}]
-    }
-    return [...state]
-}
-
-const reducers = combineReducers({
-    allCells: allCellsReducer,
+store.subscribe(() => {
+  console.log ('subscribe', store.getState())
 })
 
-const store = createStore(reducers);
+store.dispatch ({type: 'ADD_CELL', cellPlace: this.props})
 
-const mapStateToProps = function(store) {
-  return {
-    allCells: store.allCells,
-  };
-}
+// function allCellsReducer(state, action){
+//     if (state === undefined){
+//         return trs;
+//     }
 
-Table = connect(mapStateToProps)(Table)
+//     if (action.type === 'ADD_ITEM'){
+//         return [...state, {name: action.name}]
+//     }
+//     return [...state]
+// }
 
 class TableInput extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+        data_input: false
+    };
+    this.inputData = this.inputData.bind(this);
+}
+
     save(){
+      const store = createStore(this.props);
+      console.log(store.getState())
         store.dispatch({
             type: 'ADD_ITEM',
             name: this.name.name,
         })
+        store.subscribe( () => console.log(store.getState()))
     }
+
+    inputData() {       
+      this.setState(
+          (prevState, props) => ({
+              data_input: this.input.value
+          })
+      );
+      console.log ('inputData', this.input.value)
+  }
     render(){
+      console.log(this.props)
         return (
-                <input type='text' className = 'inputCells' />
+                <input type='text' className = 'inputCells' value={this.props.data_input} ref={ c => this.input = c} />
         );
     }
 }
 
-// class InputData extends Component {
-//   mouseOver(event){
-//       let parentId = +(ev.target.href.split('#')[1].match(/^comment(\d+)$/)[1])
-//       this.props.onParentLink(parentId)
-//   }
-//   mouseOut(ev){
-//       this.props.onParentLink(null)
-//   }
-//   render (){
-//       return (
-//           <div id={`comment${this.props.comment.id}`} 
-//             style={{backgroundColor: this.props.highlighted ? '#CFF' : ""}}>
-//             {this.props.comment.text} 
-//             { this.props.parentId ? <a onMouseOver={this.mouseOver.bind(this)}
-//                                        onMouseOut={this.mouseOut.bind(this)}
-//                                        href={`#comment${this.props.parentId}`}> answer to...</a> : "" }
-//           </div>
-//       )
-//   }
-// }
+// store.subscribe( () => console.log(store.getState()))
+
 
 class AppRedux extends Component {
     render() {
@@ -126,7 +137,7 @@ class AppRedux extends Component {
           <Provider store={store}>
             <div className="App">
               <TableInput />
-              <Table cells={allCells}/>
+              <Table columns = {20} rows = {25}/>
             </div>
           </Provider>
       );

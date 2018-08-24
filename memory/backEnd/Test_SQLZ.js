@@ -1,5 +1,5 @@
 var Sequelize = require('sequelize');
-var sequelize = new Sequelize('googlesheet', 'root', 'denev2211',
+var sequelize = new Sequelize('testsheet', 'root', 'denev2211',
                     {host: 'localhost',
                     dialect: 'mysql',
                     pool: {max: 5,
@@ -60,7 +60,7 @@ async function fillDB(){
     user2.addSheet(sheetUs2_2)
 }
 
-fillDB()
+// fillDB()
 
 var express = require('express');
 const cors = require ('cors');
@@ -135,4 +135,4 @@ app.use('/graphql', express_graphql({
     rootValue: root,
     graphiql: true
 }));
-app.listen(4000, () => console.log('Express GraphQL Server Now Running On localhost:4000/graphql'));
+app.listen(4010, () => console.log('Express GraphQL Server Now Running On localhost:4010/graphql'));
