@@ -15,9 +15,9 @@ var User = sequelize.define('user', {
 });
 var Sheet = sequelize.define('sheet', {
     title: Sequelize.STRING,
-    key: Sequelize.STRING
+    key: Sequelize.STRING,
+    grid: Sequelize.TEXT('long')
 } )
-
 
 Sheet.beforeCreate(function(model, options) {
     return new Promise ((resolve, reject) => {
@@ -48,6 +48,7 @@ async function fillDB(){
                         })
     
     var sheetUs1_1 = await Sheet.create({title: 'first sheet'})
+    var sheetUs1_1 = await Sheet.create({grid: 'some array'})
     var sheetUs1_2 = await Sheet.create({title: 'min_max sheet'})
     
     user1.addSheet(sheetUs1_1)
@@ -60,7 +61,7 @@ async function fillDB(){
     user2.addSheet(sheetUs2_2)
 }
 
-fillDB()
+// fillDB()
 
 var express = require('express');
 const cors = require ('cors');
@@ -78,13 +79,14 @@ var schema = buildSchema(`
     }
     type Mutation {
         createUser(login: String!, mail: String!, password: String!): User
-        createSheet(userID: Int!, title: String!): User
+        createSheet(userID: Int!, title: String!, grid: String!): User
     }
 
     type Sheet {
         id: Int
         title: String
         key: String
+        grid: String
     }
     type User {
         id: Int
@@ -115,9 +117,9 @@ function getUserSheets(args){
 async function createUser({login, mail, password}){
     return User.create({login, mail, password})
 }
-async function createSheet({userID, title}){
+async function createSheet({userID, title, grid}){
     let user  = await User.findById(userID)
-    let sheet = await Sheet.create({title})
+    let sheet = await Sheet.create({title, grid})
     user.addSheet(sheet)
     return sheet
 }

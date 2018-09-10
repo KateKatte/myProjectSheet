@@ -2,8 +2,9 @@ import React, { Component } from 'react';
 import logo from './logo.svg';
 import './App.css';
 // import Table from './gridTable'
-import AppRedux from './inputRedux'
-import Table from './gridTable'
+// import AppRedux from './inputRedux'
+import SheetFromGraph from './sheetGraph'
+import AppTable from './gridTableWithInput'
 import AppGraphRedux from './graphRedux'
 import {Router, Route} from "react-router-dom"
 import createHistory from "history/createBrowserHistory"
@@ -27,8 +28,10 @@ class App extends Component {
     return (
       <div className="App">
       <img src={logo} className="App-logo" alt="logo" />
+      {/* <SheetFromGraph/> */}
        <AppGraphRedux/>
-       <AppRedux/>
+       <AppTable/>
+       {/* <AppRedux/> */}
       </div>
     );
   }

@@ -11,6 +11,7 @@ gql.request(`query getSheet ($sheetId: Int!) {
     sheet (id: $sheetId) {
       title
       id
+      grid
     }
   }`,
   {
@@ -27,6 +28,18 @@ function getFeed() {
         }
       }`).then(data => store.dispatch({type: "DATA_GOT", data}))
 }  
+
+function getSheet() {
+    store.dispatch({type: 'DATA_GOT'})
+    gql.request(`query getSheet ($sheetId: Int!) {
+        sheet (id: $sheetId) {
+          title
+          id
+          grid
+        }
+      }`).then(data => store.dispatch({type: "DATA_GOT", data}))
+} 
+
 
 function userReducer(state, action){
     if (state === undefined){
@@ -105,7 +118,9 @@ class Sheet extends Component {
     render (){
         return (
             <div>
-              user sheet: {this.props.sheet.title}
+              <div> user sheet: {this.props.sheet.title}</div>
+              <div> user key: {this.props.sheet.key}</div>
+              <div> user grid: {this.props.sheet.grid}</div>
             </div>
         )
     }
@@ -164,6 +179,8 @@ class UserSheetPage extends Component {
               mail
                   sheets {
                     title
+                    key
+                    grid
              }
             }
           }`, {userID: this.props.match.params.id})
@@ -203,14 +220,18 @@ class AddUser extends Component {
 
 class AddSheet extends Component {
     save(){
+
         gql.request(
-            `mutation createSheet($userID:Int!, $title:String!) {
-                createSheet(userID: $userID, title: $title) {     
-                   login
+            `mutation createSheet($userID:Int!, $title:String!, $grid: String!) {
+                createSheet(userID: $userID, title: $title, grid: $grid) {     
+                   login,
+
                 }
               }`,
             {userID: this.userID.value,
-             title: this.title.value}
+             title: this.title.value,
+            //  grid: JSON.stringify
+            }
         )
     }
     render (){

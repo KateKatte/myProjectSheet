@@ -9,17 +9,22 @@ import { stat } from 'fs';
 class CellComponent extends Component {
   onClick = () => {
     this.props.onClick(this.props.columns, this.props.rows);
+    console.log (this.props)
 };
-
 render() {
     return(
      <td onClick = {this.onClick}> {this.props.children} </td>
     )
   }
 }
+
 class Table extends Component{
   cellClick = (i, j) => {
     console.log (i,j)
+    this.setState(()=>({
+      row: i,
+      column: j
+    }))
 };
 
   render(){
@@ -29,7 +34,7 @@ class Table extends Component{
       var tds = new Array();
       for (var j = 0; j <= this.props.columns; j++) {
         // tds.push (<td columns = {i} rows = {j} onClick = {this.cellClick.bind(this, i, j)}> {i} x {j} </td>)
-        tds.push (<CellComponent columns = {i} rows = {j} onClick = {this.cellClick.bind(this, i, j)}> </CellComponent>)
+        tds.push (<CellComponent columns = {i} rows = {j} onClick = {this.cellClick.bind(this, i, j)}> {this.props.div_input} </CellComponent>)
         // tds.push (<CellComponent columns = {i} rows = {j} onClick = {this.cellClick}/>)
       }
       trs.push(<tr>{tds}</tr>)
@@ -60,10 +65,10 @@ class Table extends Component{
 
 function cellPlace (state = {}, action){
   if (state === undefined){
-          return {data: {i: this.props.i, j: this.props.j}, status: 'ADD_CELL'}
+          return {data: {}, status: 'ADD_CELL'}
       }
   if (action.type ==='CELL'){
-    return {data: action.data.cell, status: 'INPT_CELL'}
+    return {data: action.CellComponent, status: 'INPT_CELL'}
   }
   console.log(action)
   return state
@@ -102,15 +107,15 @@ class TableInput extends Component {
     this.inputData = this.inputData.bind(this);
 }
 
-    save(){
-      const store = createStore(this.props);
-      console.log(store.getState())
-        store.dispatch({
-            type: 'ADD_ITEM',
-            name: this.name.name,
-        })
-        store.subscribe( () => console.log(store.getState()))
-    }
+    // save(){
+    //   const store = createStore(this.props);
+    //   console.log(store.getState())
+    //     store.dispatch({
+    //         type: 'ADD_ITEM',
+    //         name: this.name.name,
+    //     })
+    //     store.subscribe( () => console.log(store.getState()))
+    // }
 
     inputData() {       
       this.setState(
